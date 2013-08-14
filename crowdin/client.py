@@ -50,11 +50,20 @@ def pull(conf):
 
     for localization in conf['localizations']:
         for language, path in localization['target_langs'].items():
-            zip_path = '{0}/{1}'.format(language, localization['remote_path'])
+
+            # XXX: Hardcoded fix to map paired language codes
+            # to plain language codes
+            if language == "es":
+                crowndin_source_language = "es-ES"
+            else:
+                crowndin_source_language = language
+
+            zip_path = '{0}/{1}'.format(crowndin_source_language, localization['remote_path'])
 
             try:
                 translated = translations.read(zip_path)
             except KeyError:
+                print zip_path
                 logger.info("No {0} translation found".format(language))
                 continue
 
