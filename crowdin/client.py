@@ -55,8 +55,11 @@ def pull(conf):
             # to plain language codes
             if language == "es":
                 crowndin_source_language = "es-ES"
+            elif language == "zh-cn":
+                crowndin_source_language = "zh-CN"
             else:
                 crowndin_source_language = language
+
 
             zip_path = '{0}/{1}'.format(crowndin_source_language, localization['remote_path'])
 
