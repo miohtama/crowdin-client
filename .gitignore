@@ -1,2 +1,6 @@
-crowdin_client.egg-info/
-dist
+build/
+dist/
+*.pyc
+*.egg
+*swp
+*.egg-info
