@@ -57,6 +57,8 @@ def pull(conf):
                 crowndin_source_language = "es-ES"
             elif language == "zh-cn":
                 crowndin_source_language = "zh-CN"
+            elif language == "pt-br":
+                crowndin_source_language = "pt-BR"
             else:
                 crowndin_source_language = language
 
