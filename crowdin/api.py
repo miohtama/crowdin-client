@@ -101,6 +101,7 @@ class API(object):
             params['language'] = lang
         elif self.exists(target, info):
             url = self.update_url
+            params['update_option'] = 'update_as_unapproved'
         else:
             url = self.put_url
 
