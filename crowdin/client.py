@@ -41,6 +41,17 @@ def push(conf, include_source):
                 )
 
 
+def pretranslate(conf):
+    api = API(project_name=conf['project_name'], api_key=conf['api_key'])
+
+    info = api.info()
+    for localization in conf['localizations']:
+        langs = localization['target_langs'].keys()
+        target = localization['remote_path']
+        # Perform pre-translations
+        api.pretranslate(target, langs, info)
+
+
 def pull(conf):
     api = API(project_name=conf['project_name'], api_key=conf['api_key'])
 
