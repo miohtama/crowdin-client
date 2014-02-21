@@ -139,13 +139,7 @@ class API(object):
 
         url = self.pretranslate_url
 
-        # logger.info("URL: {0}".format(url))
-        # logger.info("Params: {0}".format(params))
-        # logger.info("Langs: {0}".format(langs))
-        # logger.info("Target: {0}".format(target))
-
         response = requests.post(url, params=params)
-        logger.info("Request: {0}".format(response.url))
 
         parsed = ElementTree.fromstring(response.text)
         if parsed.tag != 'success' or response.status_code != 200:
