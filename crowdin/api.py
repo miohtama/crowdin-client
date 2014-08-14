@@ -14,7 +14,7 @@ class CrowdinException(Exception):
 
 
 class API(object):
-    root_url = "http://api.crowdin.net/api"
+    root_url = "https://api.crowdin.net/api"
 
     def __init__(self, project_name=None, api_key=None):
         self.project_name = project_name
@@ -79,6 +79,10 @@ class API(object):
     def upload_translation_url(self):
         return '{0}/upload-translation'.format(self.project_url)
 
+    @property
+    def pretranslate_url(self):
+        return '{0}/pre-translate'.format(self.project_url)
+
     def put(self, local, target, info=None, lang=None):
         """
         Uploads a translation file to a remote path.
@@ -111,6 +115,35 @@ class API(object):
         parsed = ElementTree.fromstring(response.text)
         if parsed.tag != 'success' or response.status_code != 200:
             raise CrowdinException(response.text)
+
+    def pretranslate(self, target, langs, info=None):
+        """
+        Performs a pre-translation for specified files on the remote path.
+        """
+
+        if langs is None or target is None:
+            return
+
+        logger.info("Performing pre-translation of {0} into {1}".format (
+            target, langs
+            ))
+
+        if info is None:
+            info = self.info()
+
+        params = self.params()
+
+        params['languages[]'] = langs
+
+        params['files[]'] = target
+
+        url = self.pretranslate_url
+
+        response = requests.post(url, params=params)
+
+        parsed = ElementTree.fromstring(response.text)
+        if parsed.tag != 'success' or response.status_code != 200:
+           raise CrowdinException(response.text)
 
     @property
     def translations_url(self):

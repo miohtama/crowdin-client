@@ -6,11 +6,11 @@ import sys
 from optparse import OptionParser
 
 from . import __version__
-from .client import push, pull
+from .client import push, pull, pretranslate
 
 
 def main():
-    parser = OptionParser(usage='Usage: %prog [options] push|pull')
+    parser = OptionParser(usage='Usage: %prog [options] push|pull|pretranslate')
     parser.add_option('-v', '--version', dest="version", action="store_true",
                       help="Show the version number and exit")
     parser.add_option('-d', '--debug', dest="debug", action="store_true",
@@ -25,7 +25,7 @@ def main():
         sys.stdout.write("crowdin-client %s\n" % __version__)
         return
 
-    if not args or len(args) != 1 or args[0] not in ('push', 'pull'):
+    if not args or len(args) != 1 or args[0] not in ('push', 'pull', 'pretranslate'):
         parser.print_help()
         return
 
@@ -54,3 +54,6 @@ def main():
 
     elif action == 'pull':
         pull(conf)
+
+    elif action == 'pretranslate':
+        pretranslate(conf)
