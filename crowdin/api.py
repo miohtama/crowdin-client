@@ -14,7 +14,7 @@ class CrowdinException(Exception):
 
 
 class API(object):
-    root_url = "https://api.crowdin.net/api"
+    root_url = "https://api.crowdin.com/api"
 
     def __init__(self, project_name=None, api_key=None):
         self.project_name = project_name
