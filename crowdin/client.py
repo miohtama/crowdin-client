@@ -34,7 +34,12 @@ def push(conf, include_source):
         # Upload local translations
         for lang, path in localization['target_langs'].items():
             if os.path.exists(path):
-                api.put(path, localization['remote_path'], info, lang=lang)
+                try:
+                    crowdin_lang_code = localization.get("target_lang_mapping", {}).get(lang, lang)
+                    api.put(path, localization['remote_path'], info, lang=crowdin_lang_code)
+                except:
+                    logger.error("Failed to push language %s", lang)
+                    raise
             else:
                 logger.debug(
                     "Inexisting local {0} translation, skipping".format(lang)
@@ -62,25 +67,14 @@ def pull(conf):
     for localization in conf['localizations']:
         for language, path in localization['target_langs'].items():
 
-            # XXX: Hardcoded fix to map paired language codes
-            # to plain language codes
-            if language == "es":
-                crowndin_source_language = "es-ES"
-            elif language == "zh-cn":
-                crowndin_source_language = "zh-CN"
-            elif language == "pt-br":
-                crowndin_source_language = "pt-BR"
-            else:
-                crowndin_source_language = language
-
+            crowndin_source_language = localization.get("target_lang_mapping", {}).get(language, language)
 
             zip_path = '{0}/{1}'.format(crowndin_source_language, localization['remote_path'])
 
             try:
                 translated = translations.read(zip_path)
             except KeyError:
-                print zip_path
-                logger.info("No {0} translation found".format(language))
+                logger.warn("CrowdIn export did not contain language %s", crowndin_source_language)
                 continue
 
             directory = os.path.dirname(path)

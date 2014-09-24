@@ -44,6 +44,29 @@ following structure::
         ]
     }
 
+Optionally, you can specic relatinship between your own language code
+and one hosted on CrowdIn. CrowdIn always demand full language code
+(``es-ES``), but internally you might use partial code (``es``).
+
+CrowdIn language codes are dash separated, as opposite to gettext
+language codes which are underscore separated.
+
+You might want to do this if your project does not want to use CrowdIn supplied codes,
+your project started translations prior CrowdIn,
+or you need to integrate into other language related processed.
+
+    {
+        ...
+                "target_langs": {
+                    "es": "locale/es/LC_MESSAGES/django.po",
+                },
+                "target_lang_mapping": {
+                    "es": "es-ES"
+                }
+            }
+        ]
+    }
+
 Usage
 -----
 
