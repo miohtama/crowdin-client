@@ -83,7 +83,7 @@ class API(object):
     def pretranslate_url(self):
         return '{0}/pre-translate'.format(self.project_url)
 
-    def put(self, local, target, info=None, lang=None):
+    def put(self, local, target, info=None, lang=None, auto_approve_imported=False):
         """
         Uploads a translation file to a remote path.
         """
@@ -105,9 +105,11 @@ class API(object):
             params['language'] = lang
         elif self.exists(target, info):
             url = self.update_url
-            params['update_option'] = 'update_as_unapproved'
+            params['auto_approve_imported'] = "1" if auto_approve_imported else "0"
         else:
             url = self.put_url
+
+        import ipdb; ipdb.set_trace()
 
         with open(local, 'r') as f:
             files = {'files[{0}]'.format(target): f}

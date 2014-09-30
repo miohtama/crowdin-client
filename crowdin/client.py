@@ -7,7 +7,7 @@ from .api import API
 logger = logging.getLogger('crowdin')
 
 
-def push(conf, include_source):
+def push(conf, include_source, auto_approve_imported):
     api = API(project_name=conf['project_name'], api_key=conf['api_key'])
 
     info = api.info()
@@ -16,7 +16,7 @@ def push(conf, include_source):
         # Create directory structure
         dirs = localization['remote_path'].split('/')[:-1]
         for index in range(len(dirs)):
-            name = "/".join(dirs[:index + 1])
+            name = "/".join(dirs[:index + 1],)
             if not api.exists(name, info):
                 api.mkdir(name)
                 structure_changed = True
@@ -26,7 +26,7 @@ def push(conf, include_source):
 
         # Upload reference translations
         api.put(localization['source_path'],
-                localization['remote_path'], info)
+                localization['remote_path'], info, auto_approve_imported=auto_approve_imported)
 
         if not include_source:
             continue
@@ -36,7 +36,7 @@ def push(conf, include_source):
             if os.path.exists(path):
                 try:
                     crowdin_lang_code = localization.get("target_lang_mapping", {}).get(lang, lang)
-                    api.put(path, localization['remote_path'], info, lang=crowdin_lang_code)
+                    api.put(path, localization['remote_path'], info, lang=crowdin_lang_code, auto_approve_imported=auto_approve_imported)
                 except:
                     logger.error("Failed to push language %s", lang)
                     raise
@@ -74,7 +74,8 @@ def pull(conf):
             try:
                 translated = translations.read(zip_path)
             except KeyError:
-                logger.warn("CrowdIn export did not contain language %s", crowndin_source_language)
+                logger.warn("CrowdIn export archine did not contain language %s mapped as %s", language, crowndin_source_language)
+                logger.warn("File list is: %s", [f.orig_filename for f in translations.filelist])
                 continue
 
             directory = os.path.dirname(path)

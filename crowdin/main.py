@@ -19,6 +19,11 @@ def main():
         '-a', '--all', dest="include_source", action="store_true",
         help="Push all translation, not just the source translation."
     )
+    parser.add_option(
+        '-p', '--auto-approve-imported', dest="auto_approve_imported", action="store_true",
+        help="Set CrowdIn state for uploaded translations to proof-read complete."
+    )
+
     options, args = parser.parse_args()
 
     if options.version:
@@ -50,7 +55,7 @@ def main():
         conf = json.loads(f.read())
 
     if action == 'push':
-        push(conf, include_source=options.include_source)
+        push(conf, include_source=options.include_source, auto_approve_imported=options.auto_approve_imported)
 
     elif action == 'pull':
         pull(conf)
