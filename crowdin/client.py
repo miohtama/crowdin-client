@@ -7,7 +7,7 @@ from .api import API
 logger = logging.getLogger('crowdin')
 
 
-def push(conf, include_source, auto_approve_imported):
+def push(conf, include_source, auto_approve_imported, excluded_languages):
     api = API(project_name=conf['project_name'], api_key=conf['api_key'])
 
     info = api.info()
@@ -34,8 +34,15 @@ def push(conf, include_source, auto_approve_imported):
         # Upload local translations
         for lang, path in localization['target_langs'].items():
             if os.path.exists(path):
+
                 try:
+
+                    # Skipping excluded language
+                    if lang in excluded_languages:
+                        continue
+
                     crowdin_lang_code = localization.get("target_lang_mapping", {}).get(lang, lang)
+
                     api.put(path, localization['remote_path'], info, lang=crowdin_lang_code, auto_approve_imported=auto_approve_imported)
                 except:
                     logger.error("Failed to push language %s", lang)

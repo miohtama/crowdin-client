@@ -24,6 +24,11 @@ def main():
         help="Set CrowdIn state for uploaded translations to proof-read complete."
     )
 
+    parser.add_option(
+        '-x', '--exclude', dest="excluded_languages", action="store", type="string",
+        help="Comma separated list for CrowdIn language codes which are not be pushed"
+    )
+
     options, args = parser.parse_args()
 
     if options.version:
@@ -55,7 +60,12 @@ def main():
         conf = json.loads(f.read())
 
     if action == 'push':
-        push(conf, include_source=options.include_source, auto_approve_imported=options.auto_approve_imported)
+        if options.excluded_languages:
+            excluded_languages = options.excluded_languages.split(",")
+        else:
+            excluded_languages = []
+
+        push(conf, include_source=options.include_source, auto_approve_imported=options.auto_approve_imported, excluded_languages=excluded_languages)
 
     elif action == 'pull':
         pull(conf)

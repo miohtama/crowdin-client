@@ -109,8 +109,6 @@ class API(object):
         else:
             url = self.put_url
 
-        import ipdb; ipdb.set_trace()
-
         with open(local, 'r') as f:
             files = {'files[{0}]'.format(target): f}
             response = requests.post(url, params=params, files=files)
